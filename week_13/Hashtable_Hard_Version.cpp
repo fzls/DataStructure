@@ -9,16 +9,11 @@
 *
 +----------------------------------------------------------
 */
-#include <algorithm>
-#include <functional>
 #include <iostream>
-#include <string>
+#include <functional>
 #include <vector>
-#include <random>
-#include <ctime>
 #include <list>
 #include <queue>
-
 
 using namespace std;
 
@@ -27,18 +22,20 @@ struct Node {
 	int in_degree;
 	list<int> adjacents;
 
-	Node(int e = -1, int d = 0): elem{e}, in_degree{d} , adjacents{}
-		bool operator<(const Node & rhs) const {
-		return in_degree < rhs.in_degree || (in_degree == rhs.in_degree && elem < rhs.elem);
+	Node(int e = -1, int d = 0): elem{e}, in_degree{d} , adjacents() {}
+	//reload < operator because we need to use it when we use the priority queue in the STL
+	bool operator>(const Node & rhs) const {
+		return in_degree > rhs.in_degree || (in_degree == rhs.in_degree && elem > rhs.elem);
 	}
 };
 
-class priorityQueue : public priority_queue<Node>
+//because the default pop only remove the item, but won't return the value , so I override it
+class priorityQueue : public priority_queue<Node, vector<Node>, greater<Node>>
 {
 public:
 	Node pop() {
-		Node temp = priority_queue<Node>::top();
-		priority_queue<Node>::pop();
+		Node temp = priority_queue<Node, vector<Node>, greater<Node>>::top();
+		priority_queue<Node, vector<Node>, greater<Node>>::pop();
 		return temp;
 	}
 
@@ -58,25 +55,37 @@ public:
 		}
 		//make edges
 		for (int i = 0; i < tableSize; ++i)
-			if (array[i].elem != -1 && array[i].elem % tableSize != i)
-				for (int j = i - 1; array[j].elem % tableSize != array[i].elem % tableSize; j = (j == 0 ? tableSize - 1 : j - 1)) {
-					++array[i].in_degree;
+			//if the i th position of the hashTable has a item, and it is not on where it shold be(let's call this P)
+			if (array[i].elem != -1 && array[i].elem % tableSize != i) {
+				//then we calculate the in_degree as it's offset to P
+				array[i].in_degree = (i + tableSize - array[i].elem % tableSize) % tableSize;
+				//and for each node that is between this node and P, we add an edge form that node to this node
+				for (int count = 0; count < array[i].in_degree; ++count) {
+					int j = (i - count - 1 + tableSize) % tableSize;
 					array[j].adjacents.push_back(i);
 				}
+			}
 	}
 	~Graph() {}
 	void topOutput();
 };
-
+//output the vertexes in topsort with the help of min priority queue
 void Graph::topOutput() {
 	priorityQueue vertexsWithZeroIndegree;
+	int currentSize = 0;
+	//calculate the number of valid item in the hashtable for the convenice of output
 	for (int i = 0; i < tableSize; ++i)
-		if (array[i].in_degree == 0)
+		if (array[i].elem != -1)
+			++currentSize;
+	//add the zero in-degree node into the priority queue
+	for (int i = 0; i < tableSize; ++i)
+		if (array[i].in_degree == 0 && array[i].elem != -1)
 			vertexsWithZeroIndegree.push(array[i]);
-	int i = 0;
+	//remove one item from the priority queue, decress it's adjecents' in-degree by one, and add that adjecent into the queue if that adjacent's in-degree turn zero
 	while (!vertexsWithZeroIndegree.empty()) {
 		Node temp = vertexsWithZeroIndegree.pop();
-		cout << temp.elem << (++i < tableSize ? " " : "");
+		//don't print blank space at the end
+		cout << temp.elem << (--currentSize > 0 ? " " : "");
 		for (int k : temp.adjacents)
 			if (--array[k].in_degree == 0)
 				vertexsWithZeroIndegree.push(array[k]);
@@ -84,14 +93,13 @@ void Graph::topOutput() {
 }
 
 int main() {
-	// freopen("test.in", "r", stdin);
-	// freopen("test.out", "w", stdout);
+	//get the number of the input
 	int tableSize;
 	cin >> tableSize;
+	//initialize the graph
 	Graph graph(tableSize);
+	//output with topsort
 	graph.topOutput();
 
-	cout << endl;
-	system("pause");
 	return 0;
 }

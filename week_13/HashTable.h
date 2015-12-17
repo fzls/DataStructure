@@ -174,16 +174,8 @@ int HashTableWithOpenAddressing::hash(int key, int counter) {
 	return hashValue;
 }
 void HashTableWithOpenAddressing::Print() {
-	cout << "--------------------------------------------------------------" << endl;
-	cout << "-----start of print HashTable with OPEN ADRESS-----" << endl;
-	int count = 0;
 	for (auto k : _table) {
-		cout << count++ << " : " ;
-		if (k == EMPTY || k == DELETED)
-			cout << " ";
-		else
-			cout << k;
-		cout << endl;
+		cout << k << ' ' ;
 	}
 	cout << endl;
 }

@@ -18,6 +18,7 @@
 #include <ctime>
 #include <list>
 #include <queue>
+#include <HashTable.h>
 
 
 using namespace std;
@@ -100,8 +101,8 @@ void Graph::topOutput() {
 }
 
 int main() {
-	// freopen("test.in", "r", stdin);
-	// freopen("test.out", "w", stdout);
+	freopen("test.in", "r", stdin);
+	freopen("test.out", "w", stdout);
 	int tableSize;
 	cin >> tableSize;
 	Graph graph(tableSize);
