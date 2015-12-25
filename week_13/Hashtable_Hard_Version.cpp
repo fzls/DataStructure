@@ -56,7 +56,7 @@ public:
 		//make edges
 		for (int i = 0; i < tableSize; ++i)
 			//if the i th position of the hashTable has a item, and it is not on where it shold be(let's call this P)
-			if (array[i].elem != -1 && array[i].elem % tableSize != i) {
+			if (array[i].elem >= 0 && array[i].elem % tableSize != i) {
 				//then we calculate the in_degree as it's offset to P
 				array[i].in_degree = (i + tableSize - array[i].elem % tableSize) % tableSize;
 				//and for each node that is between this node and P, we add an edge form that node to this node
@@ -75,11 +75,11 @@ void Graph::topOutput() {
 	int currentSize = 0;
 	//calculate the number of valid item in the hashtable for the convenice of output
 	for (int i = 0; i < tableSize; ++i)
-		if (array[i].elem != -1)
+		if (array[i].elem >= 0)
 			++currentSize;
 	//add the zero in-degree node into the priority queue
 	for (int i = 0; i < tableSize; ++i)
-		if (array[i].in_degree == 0 && array[i].elem != -1)
+		if (array[i].in_degree == 0 && array[i].elem >= 0)
 			vertexsWithZeroIndegree.push(array[i]);
 	//remove one item from the priority queue, decress it's adjecents' in-degree by one, and add that adjecent into the queue if that adjacent's in-degree turn zero
 	while (!vertexsWithZeroIndegree.empty()) {

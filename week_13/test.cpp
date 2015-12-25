@@ -29,7 +29,7 @@ int main() {
 	clock_t _time = clock();
 	default_random_engine _e(_time);
 
-	int nums = 10 + _e() % 20;
+	int nums = 100 + _e() % 20;
 	cout << nums << endl;
 	HashTableWithOpenAddressing table(nums);
 	vector<int> input(nums, 0) ;
