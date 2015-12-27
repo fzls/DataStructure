@@ -112,6 +112,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="maxFlow.cpp" />
+    <ClCompile Include="references.cpp" />
     <ClCompile Include="Shortest Path[2].c" />
     <ClCompile Include="ShortestPath[3].c" />
   </ItemGroup>

@@ -157,3 +157,10 @@ target/
 
 .metadata/
 .recommenders/
+*.idb
+*.tlog
+*.vcxproj
+*.exe
+*.suo
+*.pdb
+week_14/week_14.sdf
